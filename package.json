@@ -1,0 +1,13 @@
+{
+  "name": "react-native-mifare-classic-wrapper",
+  "version": "1.0.0",
+  "description": "Mifare Classic wrapper for react-native-nfc-manager",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/featherbear/react-native-mifare-classic-wrapper.git"
+  },
+  "author": "featherbear",
+  "license": "MIT",
+  "homepage": "https://github.com/featherbear/react-native-mifare-classic-wrapper"
+}
