@@ -1,4 +1,4 @@
-import NfcManager, { ByteParser, NfcTech } from 'react-native-nfc-manager'
+import NfcManager, { ByteParser, NfcTech, NfcEvents } from 'react-native-nfc-manager'
 
 class TagObject {
   constructor (rawData) {
@@ -51,6 +51,7 @@ class TagObject {
 }
 
 let __enabled = false
+const stateListeners = []
 
 class MFCwrapper {
   get NfcManager () {
@@ -63,7 +64,11 @@ class MFCwrapper {
 
   async start () {
     if (!await this.isMFCsupported()) throw new Error('MFC not supported')
-    // NfcManager.onStateChanged(
+
+    NfcManager.setEventListener(NfcEvents.StateChanged, data => stateListeners.forEach(listener => listener(data)))
+    this.onStateChanged(() => {
+      NfcManager.cancelTechnologyRequest()
+    })
 
     return NfcManager.start()
       .then(() => NfcManager.isEnabled())
@@ -76,7 +81,8 @@ class MFCwrapper {
   }
 
   listen (callback) {
-    if (!__enabled) return false
+    if (!__enabled) return false // Service not started yet
+
     const listenFn = () => {
       NfcManager.registerTagEvent()
         .then(() => NfcManager.requestTechnology(NfcTech.MifareClassic))
@@ -91,6 +97,10 @@ class MFCwrapper {
 
     listenFn()
     return true
+  }
+
+  onStateChanged (listener) {
+    stateListeners.push(listener)
   }
 }
 
