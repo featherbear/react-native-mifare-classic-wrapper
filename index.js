@@ -2,15 +2,14 @@ import NfcManager, { ByteParser, NfcTech } from 'react-native-nfc-manager'
 
 class TagObject {
   constructor (rawData) {
-    this.__rawData = { ...rawData }
-    this.id = rawData.id
+    this._id = rawData.id
   }
 
   get id () {
-    return this.rawData.id
+    return this._id
   }
 
-  authenticate (keyType, sector, key) {
+  async authenticate (keyType, sector, key) {
     switch (keyType) {
       case 'A':
         return NfcManager.mifareClassicAuthenticateA(sector, key)
@@ -38,6 +37,7 @@ class TagObject {
     if (sector && key && keyType) {
       await this.authenticate(keyType, sector, key)
     }
+
     return NfcManager.mifareClassicReadBlock(block)
   }
 
@@ -77,12 +77,11 @@ class MFCwrapper {
 
   listen (callback) {
     if (!__enabled) return false
-
     const listenFn = () => {
       NfcManager.registerTagEvent()
         .then(() => NfcManager.requestTechnology(NfcTech.MifareClassic))
         .then(() => NfcManager.getTag())
-        .then(tag => callback(new TagObject(tag)))
+        .then(async tag => await callback(new TagObject(tag)))
         .finally(() => {
           NfcManager.cancelTechnologyRequest()
           NfcManager.unregisterTagEvent()
