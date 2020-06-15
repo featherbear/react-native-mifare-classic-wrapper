@@ -50,7 +50,6 @@ class TagObject {
   }
 }
 
-let __enabled = false
 const stateListeners = []
 
 class MFCwrapper {
@@ -76,13 +75,10 @@ class MFCwrapper {
         if (!nfcEnabled) {
           throw new Error('NFC disabled!')
         }
-        __enabled = true
       })
   }
 
   listen (callback) {
-    if (!__enabled) return false // Service not started yet
-
     const listenFn = () => {
       NfcManager.registerTagEvent()
         .then(() => NfcManager.requestTechnology(NfcTech.MifareClassic))
@@ -96,7 +92,6 @@ class MFCwrapper {
     }
 
     listenFn()
-    return true
   }
 
   onStateChanged (listener) {
