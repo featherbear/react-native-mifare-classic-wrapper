@@ -2,8 +2,8 @@ import NfcManager, { ByteParser, NfcTech } from 'react-native-nfc-manager'
 
 class TagObject {
   constructor (rawData) {
-    this.rawData = { ...rawData }
-    console.log(rawData)
+    this.__rawData = { ...rawData }
+    this.id = rawData.id
   }
 
   get id () {
@@ -82,9 +82,7 @@ class MFCwrapper {
       NfcManager.registerTagEvent()
         .then(() => NfcManager.requestTechnology(NfcTech.MifareClassic))
         .then(() => NfcManager.getTag())
-        .then(tag => {
-          callback(new TagObject(tag))
-        })
+        .then(tag => callback(new TagObject(tag)))
         .finally(() => {
           NfcManager.cancelTechnologyRequest()
           NfcManager.unregisterTagEvent()
