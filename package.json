@@ -9,5 +9,8 @@
   },
   "author": "featherbear",
   "license": "MIT",
-  "homepage": "https://github.com/featherbear/react-native-mifare-classic-wrapper"
+  "homepage": "https://github.com/featherbear/react-native-mifare-classic-wrapper",
+  "dependencies": {
+    "react-native-nfc-manager": "^2.1.9"
+  }
 }
